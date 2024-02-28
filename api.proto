@@ -2,6 +2,36 @@ syntax = "proto3";
 
 option go_package = "github.com/matisiekpl/electrocardiogram-server/internal/proto";
 
-service Electrocardiogram {
 
+message Record {
+  string id = 1;
+  string value = 2;
+  int64  timestamp = 3;
+}
+
+message ListRecordsRequest {
+  string from = 1;
+  string to = 2;
+}
+
+message ListRecordsResponse {
+  repeated Record records = 1;
+}
+
+message StreamRecordsRequest {
+}
+
+message Analysis {
+  int64 rr = 1;
+  int64 hr = 2;
+  int64 qrs = 3;
+  int64 qt = 4;
+  int64 qtc = 5;
+  int64 p = 6;
+  int64 t = 7;
+}
+
+service Electrocardiogram {
+  rpc ListRecords(ListRecordsRequest) returns (ListRecordsResponse) {}
+  rpc StreamRecords(StreamRecordsRequest) returns (stream Record) {}
 }
