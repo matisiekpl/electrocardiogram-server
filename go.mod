@@ -9,6 +9,7 @@ require (
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/sirupsen/logrus v1.9.3
 	golang.org/x/crypto v0.19.0
+	google.golang.org/protobuf v1.32.0
 	gorm.io/driver/postgres v1.5.6
 	gorm.io/gorm v1.25.7
 )
