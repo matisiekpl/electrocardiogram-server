@@ -15,7 +15,7 @@ import (
 	"github.com/matisiekpl/electrocardiogram-server/internal/repository"
 	"github.com/matisiekpl/electrocardiogram-server/internal/service"
 	"github.com/sirupsen/logrus"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -27,7 +27,7 @@ func main() {
 
 	config := dto.Config{DSN: os.Getenv("DSN"), SigningSecret: os.Getenv("JWT_SECRET")}
 
-	db, err := gorm.Open(postgres.Open(config.DSN), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(config.DSN), &gorm.Config{})
 	if err != nil {
 		logrus.Panic(err)
 	}
@@ -55,6 +55,8 @@ func main() {
 	services := service.NewServices(repositories, config, clients)
 	controllers := controller.NewControllers(services)
 	controllers.Route(e)
+
+	go services.Record().Connect()
 
 	protos := proto.NewProtos(services)
 	go func() {

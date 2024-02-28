@@ -3,6 +3,7 @@ package proto
 import (
 	"github.com/matisiekpl/electrocardiogram-server/internal/service"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"net"
 )
 
@@ -11,6 +12,8 @@ type Protos interface {
 }
 type protos struct {
 	grpcServer *grpc.Server
+
+	recordProto RecordProto
 }
 
 func (p protos) Serve(listener net.Listener) error {
@@ -19,9 +22,14 @@ func (p protos) Serve(listener net.Listener) error {
 
 func NewProtos(services service.Services) Protos {
 	grpcServer := grpc.NewServer()
-	s := &server{}
+	recordProto := newRecordProto(services.Record())
+	s := &server{
+		recordProto: recordProto,
+	}
 	RegisterElectrocardiogramServer(grpcServer, s)
+	reflection.Register(grpcServer)
 	return &protos{
-		grpcServer: grpcServer,
+		grpcServer:  grpcServer,
+		recordProto: recordProto,
 	}
 }

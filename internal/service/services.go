@@ -7,11 +7,20 @@ import (
 )
 
 type Services interface {
+	Record() RecordService
 }
 
 type services struct {
+	recordService RecordService
+}
+
+func (s services) Record() RecordService {
+	return s.recordService
 }
 
 func NewServices(repositories repository.Repositories, config dto.Config, clients client.Clients) Services {
-	return &services{}
+	recordService := newRecordService(repositories.Record())
+	return &services{
+		recordService: recordService,
+	}
 }

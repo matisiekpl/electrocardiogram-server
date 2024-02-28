@@ -4,21 +4,21 @@ option go_package = "github.com/matisiekpl/electrocardiogram-server/internal/pro
 
 
 message Record {
-  string id = 1;
-  string value = 2;
+  int64 id = 1;
+  int64 value = 2;
   int64  timestamp = 3;
 }
 
-message ListRecordsRequest {
-  string from = 1;
-  string to = 2;
+message Filter {
+  int64 start = 1;
+  int64 end = 2;
 }
 
 message ListRecordsResponse {
   repeated Record records = 1;
 }
 
-message StreamRecordsRequest {
+message Empty {
 }
 
 message Analysis {
@@ -32,6 +32,7 @@ message Analysis {
 }
 
 service Electrocardiogram {
-  rpc ListRecords(ListRecordsRequest) returns (ListRecordsResponse) {}
-  rpc StreamRecords(StreamRecordsRequest) returns (stream Record) {}
+  rpc ListRecords(Filter) returns (ListRecordsResponse) {}
+  rpc StreamRecords(Empty) returns (stream Record) {}
+  rpc Analyze(Filter) returns (Analysis) {}
 }

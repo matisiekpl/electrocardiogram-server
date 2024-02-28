@@ -20,7 +20,7 @@ func newRecordRepository(db *gorm.DB) RecordRepository {
 
 func (r recordRepository) Filter(start, end int64) ([]model.Record, error) {
 	var records []model.Record
-	err := r.db.Where("timestamp > ? and timestamp < ?", start, end).Find(&records).Error
+	err := r.db.Model(model.Record{}).Where("timestamp > ? and timestamp < ?", start, end).Find(&records).Error
 	if err != nil {
 		return nil, err
 	}
