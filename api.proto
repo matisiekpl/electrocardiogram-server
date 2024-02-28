@@ -1,3 +1,7 @@
 syntax = "proto3";
 
 option go_package = "github.com/matisiekpl/electrocardiogram-server/internal/proto";
+
+service Electrocardiogram {
+
+}
