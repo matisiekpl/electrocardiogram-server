@@ -34,5 +34,9 @@ func (r recordRepository) Insert(record *model.Record) error {
 }
 
 func (r recordRepository) PurgeOlderThan(time time.Time) error {
-	return r.db.Model(&model.Record{}).Unscoped().Where("timestamp < ?", time.UnixMilli()).Delete(&model.Record{}).Error
+	err := r.db.Model(&model.Record{}).Unscoped().Where("timestamp < ?", time.UnixMilli()).Delete(&model.Record{}).Error
+	if err != nil {
+		return err
+	}
+	return r.db.Exec("VACUUM").Error
 }
