@@ -19,7 +19,7 @@ func (s services) Record() RecordService {
 }
 
 func NewServices(repositories repository.Repositories, config dto.Config, clients client.Clients) Services {
-	recordService := newRecordService(repositories.Record())
+	recordService := newRecordService(repositories.Record(), config)
 	return &services{
 		recordService: recordService,
 	}

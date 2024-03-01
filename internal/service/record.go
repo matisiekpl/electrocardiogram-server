@@ -1,11 +1,16 @@
 package service
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/matisiekpl/electrocardiogram-server/internal/dto"
 	"github.com/matisiekpl/electrocardiogram-server/internal/model"
 	"github.com/matisiekpl/electrocardiogram-server/internal/repository"
 	"github.com/sirupsen/logrus"
 	"go.bug.st/serial"
+	"io"
+	"net/http"
+	"sort"
 	"strings"
 	"time"
 )
@@ -21,12 +26,14 @@ type RecordService interface {
 type recordService struct {
 	recordRepository repository.RecordRepository
 	channel          chan model.Record
+	config           dto.Config
 }
 
-func newRecordService(recordRepository repository.RecordRepository) RecordService {
+func newRecordService(recordRepository repository.RecordRepository, config dto.Config) RecordService {
 	return &recordService{
 		recordRepository: recordRepository,
 		channel:          make(chan model.Record, 5),
+		config:           config,
 	}
 }
 
@@ -35,8 +42,41 @@ func (r recordService) ListRecords(filter dto.Filter) ([]model.Record, error) {
 }
 
 func (r recordService) Analyze(filter dto.Filter) (dto.Analysis, error) {
-	//TODO implement me
-	panic("implement me")
+	var numbers []int64
+	records, err := r.ListRecords(filter)
+	if err != nil {
+		return dto.Analysis{}, err
+	}
+	sort.Slice(records, func(i, j int) bool {
+		return records[i].Timestamp > records[j].Timestamp
+	})
+	for _, record := range records {
+		numbers = append(numbers, record.Value)
+	}
+
+	payload, err := json.Marshal(numbers)
+	if err != nil {
+		return dto.Analysis{}, err
+	}
+
+	resp, err := http.Post(r.config.MachineLearningServerURL+"/analyze", "application/json", bytes.NewBuffer(payload))
+	if err != nil {
+		return dto.Analysis{}, err
+	}
+
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return dto.Analysis{}, err
+	}
+
+	var result dto.Analysis
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return dto.Analysis{}, err
+	}
+
+	return result, nil
 }
 
 func (r recordService) Channel() chan model.Record {
