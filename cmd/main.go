@@ -63,7 +63,7 @@ func main() {
 	go func() {
 		grpcPort := os.Getenv("GRPC_PORT")
 		if grpcPort == "" {
-			grpcPort = "3001"
+			grpcPort = "7001"
 		}
 		logrus.Info("Starting GRPC (TLS) server on port " + grpcPort)
 		listener, err := net.Listen("tcp", ":"+grpcPort)
@@ -85,7 +85,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = "7000"
 	}
 	logrus.Info("Starting HTTP server on port " + port)
 	logrus.Fatal(e.Start(":" + port))
