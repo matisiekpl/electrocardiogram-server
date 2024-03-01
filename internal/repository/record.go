@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/matisiekpl/electrocardiogram-server/internal/model"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"time"
 )
@@ -34,9 +35,10 @@ func (r recordRepository) Insert(record *model.Record) error {
 }
 
 func (r recordRepository) PurgeOlderThan(time time.Time) error {
-	err := r.db.Model(&model.Record{}).Unscoped().Where("timestamp < ?", time.UnixMilli()).Delete(&model.Record{}).Error
-	if err != nil {
-		return err
+	tx := r.db.Model(&model.Record{}).Unscoped().Where("timestamp < ?", time.UnixMilli()).Delete(&model.Record{})
+	if tx.Error != nil {
+		return tx.Error
 	}
-	return r.db.Exec("VACUUM").Error
+	logrus.Infof("deleted %d rows", tx.RowsAffected)
+	return r.db.Exec("VACUUM;").Error
 }
