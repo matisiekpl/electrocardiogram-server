@@ -5,6 +5,7 @@ import (
 	"github.com/matisiekpl/electrocardiogram-server/internal/proto"
 	"net"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -70,6 +71,16 @@ func main() {
 			logrus.Panic(err)
 		}
 		logrus.Fatal(protos.Serve(listener))
+	}()
+
+	go func() {
+		for {
+			err := services.Record().Clean()
+			if err != nil {
+				logrus.Error(err)
+			}
+			time.Sleep(5 * time.Second)
+		}
 	}()
 
 	port := os.Getenv("PORT")

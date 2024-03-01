@@ -3,11 +3,13 @@ package repository
 import (
 	"github.com/matisiekpl/electrocardiogram-server/internal/model"
 	"gorm.io/gorm"
+	"time"
 )
 
 type RecordRepository interface {
 	Filter(start, end int64) ([]model.Record, error)
 	Insert(record *model.Record) error
+	PurgeOlderThan(time time.Time) error
 }
 
 type recordRepository struct {
@@ -29,4 +31,8 @@ func (r recordRepository) Filter(start, end int64) ([]model.Record, error) {
 
 func (r recordRepository) Insert(record *model.Record) error {
 	return r.db.Create(&record).Error
+}
+
+func (r recordRepository) PurgeOlderThan(time time.Time) error {
+	return r.db.Model(&model.Record{}).Where("timestamp < ?", time.UnixMilli()).Delete(&model.Record{}).Error
 }

@@ -15,6 +15,7 @@ type RecordService interface {
 	Analyze(filter dto.Filter) (dto.Analysis, error)
 	Channel() chan model.Record
 	Connect()
+	Clean() error
 }
 
 type recordService struct {
@@ -76,7 +77,7 @@ func (r recordService) Connect() {
 
 	for {
 		r.Save(77)
-		time.Sleep(1 * time.Second)
+		time.Sleep(8 * time.Millisecond)
 	}
 
 	//if len(usbPorts) == 0 {
@@ -105,4 +106,9 @@ func (r recordService) Connect() {
 	//	line := string(buff[:n])
 	//	logrus.Debugf("serial: %s", line)
 	//}
+}
+
+func (r recordService) Clean() error {
+	logrus.Info("cleaning up database")
+	return r.recordRepository.PurgeOlderThan(time.Now().Add(-5 * time.Minute))
 }
