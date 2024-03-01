@@ -75,8 +75,18 @@ func (r recordService) Connect() {
 		}
 	}
 
+	delta := 1
+	current := 100
+
 	for {
-		r.Save(77)
+		if current > 200 {
+			delta = -1
+		}
+		if current < 100 {
+			delta = 1
+		}
+		current += delta
+		r.Save(int64(current))
 		time.Sleep(8 * time.Millisecond)
 	}
 
