@@ -1,10 +1,14 @@
 package proto
 
 import (
-	"github.com/matisiekpl/electrocardiogram-server/internal/service"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	"crypto/tls"
 	"net"
+
+	"github.com/matisiekpl/electrocardiogram-server/internal/service"
+	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/reflection"
 )
 
 type Protos interface {
@@ -21,7 +25,11 @@ func (p protos) Serve(listener net.Listener) error {
 }
 
 func NewProtos(services service.Services) Protos {
-	grpcServer := grpc.NewServer()
+	grpcCredentials, err := tls.LoadX509KeyPair("server.crt", "server.key")
+	if err != nil {
+		logrus.Panic(err)
+	}
+	grpcServer := grpc.NewServer(grpc.Creds(credentials.NewServerTLSFromCert(&grpcCredentials)))
 	recordProto := newRecordProto(services.Record())
 	s := &server{
 		recordProto: recordProto,
