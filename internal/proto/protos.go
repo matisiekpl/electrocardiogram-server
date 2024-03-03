@@ -7,7 +7,6 @@ import (
 	"github.com/matisiekpl/electrocardiogram-server/internal/service"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -29,7 +28,9 @@ func NewProtos(services service.Services) Protos {
 	if err != nil {
 		logrus.Panic(err)
 	}
-	grpcServer := grpc.NewServer(grpc.Creds(credentials.NewServerTLSFromCert(&grpcCredentials)))
+	_ = grpcCredentials
+	//grpcServer := grpc.NewServer(grpc.Creds(credentials.NewServerTLSFromCert(&grpcCredentials)))
+	grpcServer := grpc.NewServer()
 	recordProto := newRecordProto(services.Record())
 	s := &server{
 		recordProto: recordProto,
