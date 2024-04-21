@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/matisiekpl/electrocardiogram-server/internal/assets"
 	"github.com/matisiekpl/electrocardiogram-server/internal/dto"
 	"github.com/matisiekpl/electrocardiogram-server/internal/model"
 	"github.com/matisiekpl/electrocardiogram-server/internal/repository"
@@ -11,6 +12,7 @@ import (
 	"io"
 	"net/http"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -113,6 +115,28 @@ func (r recordService) Connect() {
 		if strings.Contains(p, "usb") {
 			usbPorts = append(usbPorts, p)
 		}
+	}
+
+	i := 0
+	lines := strings.Split(assets.SampleLog, "\n")
+
+	for {
+		line := lines[i]
+		i++
+		if i >= len(lines) {
+			i = 0
+		}
+
+		parsedNumber, err := strconv.ParseInt(strings.TrimSpace(line), 10, 64)
+		if err != nil {
+			logrus.Errorf("failed to parse value %s", line)
+		}
+
+		err = r.Save(parsedNumber)
+		if err != nil {
+			logrus.Errorf("failed to save record with value %d: %w", parsedNumber, err)
+		}
+		time.Sleep(8 * time.Millisecond)
 	}
 
 	delta := 1
