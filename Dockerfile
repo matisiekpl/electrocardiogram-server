@@ -11,4 +11,6 @@ WORKDIR /
 COPY --from=builder /main /main
 EXPOSE 6000
 EXPOSE 6001
+COPY server.crt /server.crt
+COPY server.key /server.key
 ENTRYPOINT ["/main"]
