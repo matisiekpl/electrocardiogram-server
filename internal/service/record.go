@@ -110,7 +110,7 @@ func (r recordService) Connect() {
 	var usbPorts []string
 	for _, p := range ports {
 		logrus.Infof("found serial port: %s", p)
-		if strings.Contains(p, "USB") {
+		if strings.Contains(p, "usb") {
 			usbPorts = append(usbPorts, p)
 		}
 	}
@@ -135,7 +135,7 @@ func (r recordService) Connect() {
 	//	return
 	//}
 	//mode := &serial.Mode{
-	//	BaudRate: 115200,
+	//	BaudRate: 57600,
 	//}
 	//port, err := serial.Open(usbPorts[0], mode)
 	//if err != nil {
@@ -155,6 +155,22 @@ func (r recordService) Connect() {
 	//	}
 	//	line := string(buff[:n])
 	//	logrus.Debugf("serial: %s", line)
+	//
+	//	line = strings.ReplaceAll(line, "\n\n", "")
+	//	line = strings.TrimSpace(line)
+	//
+	//	parsed, err := strconv.ParseInt(line, 10, 64)
+	//
+	//	if err != nil {
+	//		logrus.Errorf("failed to parse value %s", line)
+	//	}
+	//	if parsed < 150 {
+	//		continue
+	//	}
+	//	err = r.Save(parsed)
+	//	if err != nil {
+	//		logrus.Errorf("failed to save record with value %d: %w", parsed, err)
+	//	}
 	//}
 }
 
