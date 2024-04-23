@@ -32,8 +32,17 @@ message Analysis {
   int64 t = 7;
 }
 
+message Classification {
+  float n = 1;
+  float s = 2;
+  float v = 3;
+  float f = 4;
+  float q = 5;
+}
+
 service Electrocardiogram {
   rpc ListRecords(Filter) returns (ListRecordsResponse) {}
   rpc StreamRecords(Empty) returns (stream Record) {}
   rpc Analyze(Filter) returns (Analysis) {}
+  rpc Classify(Filter) returns (Classification) {}
 }

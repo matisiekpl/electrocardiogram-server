@@ -19,3 +19,7 @@ func (s server) StreamRecords(_ *Empty, streamer Electrocardiogram_StreamRecords
 func (s server) Analyze(_ context.Context, filter *Filter) (*Analysis, error) {
 	return s.recordProto.Analyze(filter)
 }
+
+func (s server) Classify(_ context.Context, filter *Filter) (*Classification, error) {
+	return s.recordProto.Classify(filter)
+}

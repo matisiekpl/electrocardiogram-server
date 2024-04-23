@@ -11,6 +11,7 @@ type RecordProto interface {
 	ListRecords(filter *Filter) (*ListRecordsResponse, error)
 	StreamRecords(streamer Electrocardiogram_StreamRecordsServer) error
 	Analyze(filter *Filter) (*Analysis, error)
+	Classify(filter *Filter) (*Classification, error)
 }
 
 type recordProto struct {
@@ -48,6 +49,11 @@ func (r recordProto) StreamRecords(streamer Electrocardiogram_StreamRecordsServe
 }
 
 func (r recordProto) Analyze(filter *Filter) (*Analysis, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r recordProto) Classify(filter *Filter) (*Classification, error) {
 	//TODO implement me
 	panic("implement me")
 }
