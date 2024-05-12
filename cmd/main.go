@@ -26,7 +26,8 @@ func main() {
 		logrus.Info("Error loading .env file")
 	}
 
-	config := dto.Config{DSN: os.Getenv("DSN"), SigningSecret: os.Getenv("JWT_SECRET")}
+	config := dto.Config{DSN: os.Getenv("DSN"), SigningSecret: os.Getenv("JWT_SECRET"), MachineLearningEndpoint: os.Getenv("MACHINE_LEARNING_ENDPOINT")}
+	logrus.Infof("Using machine learning endpoint: %s", config.MachineLearningEndpoint)
 
 	db, err := gorm.Open(sqlite.Open(config.DSN), &gorm.Config{})
 	if err != nil {

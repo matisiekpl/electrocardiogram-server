@@ -62,7 +62,7 @@ func (r recordService) Analyze(filter dto.Filter) (dto.Analysis, error) {
 		return dto.Analysis{}, err
 	}
 
-	resp, err := http.Post(r.config.MachineLearningServerURL+"/analyze", "application/json", bytes.NewBuffer(payload))
+	resp, err := http.Post(r.config.MachineLearningEndpoint+"/analyze", "application/json", bytes.NewBuffer(payload))
 	if err != nil {
 		return dto.Analysis{}, err
 	}
@@ -98,7 +98,7 @@ func (r recordService) Classify(filter dto.Filter) (dto.Classification, error) {
 		return dto.Classification{}, err
 	}
 
-	resp, err := http.Post(r.config.MachineLearningServerURL+"/classify", "application/json", bytes.NewBuffer(payload))
+	resp, err := http.Post(r.config.MachineLearningEndpoint+"/classify", "application/json", bytes.NewBuffer(payload))
 	if err != nil {
 		return dto.Classification{}, err
 	}
@@ -237,5 +237,6 @@ func (r recordService) Connect() {
 
 func (r recordService) Clean() error {
 	logrus.Info("cleaning up database")
+	//return nil
 	return r.recordRepository.PurgeOlderThan(time.Now().Add(-10 * time.Second))
 }
