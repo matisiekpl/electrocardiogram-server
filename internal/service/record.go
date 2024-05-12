@@ -20,6 +20,7 @@ import (
 type RecordService interface {
 	ListRecords(filter dto.Filter) ([]model.Record, error)
 	Analyze(filter dto.Filter) (dto.Analysis, error)
+	Classify(filter dto.Filter) (dto.Classification, error)
 	Channel() chan model.Record
 	Connect()
 	Clean() error
@@ -76,6 +77,42 @@ func (r recordService) Analyze(filter dto.Filter) (dto.Analysis, error) {
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return dto.Analysis{}, err
+	}
+
+	return result, nil
+}
+
+func (r recordService) Classify(filter dto.Filter) (dto.Classification, error) {
+	records, err := r.recordRepository.Filter(filter.Start, filter.End)
+	if err != nil {
+		return dto.Classification{}, err
+	}
+
+	var values []int64
+	for _, record := range records {
+		values = append(values, record.Value)
+	}
+
+	payload, err := json.Marshal(values)
+	if err != nil {
+		return dto.Classification{}, err
+	}
+
+	resp, err := http.Post(r.config.MachineLearningServerURL+"/classify", "application/json", bytes.NewBuffer(payload))
+	if err != nil {
+		return dto.Classification{}, err
+	}
+
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return dto.Classification{}, err
+	}
+
+	var result dto.Classification
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return dto.Classification{}, err
 	}
 
 	return result, nil

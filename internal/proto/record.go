@@ -54,8 +54,18 @@ func (r recordProto) Analyze(filter *Filter) (*Analysis, error) {
 }
 
 func (r recordProto) Classify(filter *Filter) (*Classification, error) {
-	//TODO implement me
-	panic("implement me")
+	classification, err := r.recordService.Classify(dto.Filter{Start: filter.Start, End: filter.End})
+	if err != nil {
+		return nil, err
+	}
+
+	return &Classification{
+		N: classification.N,
+		S: classification.S,
+		V: classification.V,
+		F: classification.F,
+		Q: classification.Q,
+	}, nil
 }
 
 func (r recordProto) convert(record model.Record) *Record {
