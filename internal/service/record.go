@@ -237,6 +237,5 @@ func (r recordService) Connect() {
 
 func (r recordService) Clean() error {
 	logrus.Info("cleaning up database")
-	//return nil
-	return r.recordRepository.PurgeOlderThan(time.Now().Add(-10 * time.Second))
+	return r.recordRepository.PurgeOlderThan(time.Now().Add(-10 * time.Minute))
 }

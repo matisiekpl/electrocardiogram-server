@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option go_package = "github.com/matisiekpl/electrocardiogram-server/internal/proto";
-package com.ekg.proto;
+//package com.ekg.proto;
 
 
 message Record {

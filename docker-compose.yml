@@ -7,4 +7,5 @@ services:
       - "6000:6000"
     environment:
       DSN: database.db
-      MACHINE_LEARNING_ENDPOINT: http://srv3.enteam.pl:6003
+#      MACHINE_LEARNING_ENDPOINT: http://srv3.enteam.pl:6003
+      MACHINE_LEARNING_ENDPOINT: http://localhost:6003

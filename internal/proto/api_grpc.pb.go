@@ -38,7 +38,7 @@ func NewElectrocardiogramClient(cc grpc.ClientConnInterface) ElectrocardiogramCl
 
 func (c *electrocardiogramClient) ListRecords(ctx context.Context, in *Filter, opts ...grpc.CallOption) (*ListRecordsResponse, error) {
 	out := new(ListRecordsResponse)
-	err := c.cc.Invoke(ctx, "/com.ekg.proto.Electrocardiogram/ListRecords", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Electrocardiogram/ListRecords", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *electrocardiogramClient) ListRecords(ctx context.Context, in *Filter, o
 }
 
 func (c *electrocardiogramClient) StreamRecords(ctx context.Context, in *Empty, opts ...grpc.CallOption) (Electrocardiogram_StreamRecordsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Electrocardiogram_ServiceDesc.Streams[0], "/com.ekg.proto.Electrocardiogram/StreamRecords", opts...)
+	stream, err := c.cc.NewStream(ctx, &Electrocardiogram_ServiceDesc.Streams[0], "/Electrocardiogram/StreamRecords", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (x *electrocardiogramStreamRecordsClient) Recv() (*Record, error) {
 
 func (c *electrocardiogramClient) Analyze(ctx context.Context, in *Filter, opts ...grpc.CallOption) (*Analysis, error) {
 	out := new(Analysis)
-	err := c.cc.Invoke(ctx, "/com.ekg.proto.Electrocardiogram/Analyze", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Electrocardiogram/Analyze", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +88,7 @@ func (c *electrocardiogramClient) Analyze(ctx context.Context, in *Filter, opts 
 
 func (c *electrocardiogramClient) Classify(ctx context.Context, in *Filter, opts ...grpc.CallOption) (*Classification, error) {
 	out := new(Classification)
-	err := c.cc.Invoke(ctx, "/com.ekg.proto.Electrocardiogram/Classify", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Electrocardiogram/Classify", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func _Electrocardiogram_ListRecords_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/com.ekg.proto.Electrocardiogram/ListRecords",
+		FullMethod: "/Electrocardiogram/ListRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ElectrocardiogramServer).ListRecords(ctx, req.(*Filter))
@@ -184,7 +184,7 @@ func _Electrocardiogram_Analyze_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/com.ekg.proto.Electrocardiogram/Analyze",
+		FullMethod: "/Electrocardiogram/Analyze",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ElectrocardiogramServer).Analyze(ctx, req.(*Filter))
@@ -202,7 +202,7 @@ func _Electrocardiogram_Classify_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/com.ekg.proto.Electrocardiogram/Classify",
+		FullMethod: "/Electrocardiogram/Classify",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ElectrocardiogramServer).Classify(ctx, req.(*Filter))
@@ -214,7 +214,7 @@ func _Electrocardiogram_Classify_Handler(srv interface{}, ctx context.Context, d
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Electrocardiogram_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "com.ekg.proto.Electrocardiogram",
+	ServiceName: "Electrocardiogram",
 	HandlerType: (*ElectrocardiogramServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
